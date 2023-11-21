@@ -1,15 +1,14 @@
 #include <iostream>
+#include <windows.h>  
 #include "..\\include\\alarm_system.h"
-#include "..\\include\\analyze.h"
 using namespace std;
-
-//g++ -o alarm_system main.cpp analyze.cpp
 
 int main(void) {
     AlarmSystem alarmSystem;
 
     while (true) {
         alarmSystem.update();
+        Sleep(500);
     }
 
     return 0;

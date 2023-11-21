@@ -1,6 +1,9 @@
 #pragma once
 #include <cstdlib> 
 #include <vector>
+#include <chrono>
+#include "signal.h"
+using namespace std::chrono;
 using namespace std;
 
 template<typename T>
@@ -27,5 +30,34 @@ public:
             }
         }
         return matrix;
+    }
+};
+
+
+class DataRetriever {
+private:
+    Sensor sensor1, sensor2;
+    Camera camera;
+    steady_clock::time_point lastSensorSample;
+    steady_clock::time_point lastCameraSample;
+
+public:
+    Signal<vector<int>> sensorSignal;
+    Signal<vector<vector<int>>> cameraSignal;
+
+    DataRetriever() : 
+        lastSensorSample(steady_clock::now()), 
+        lastCameraSample(steady_clock::now()) {}
+
+    void update() {
+        auto now = steady_clock::now();
+        if (duration_cast<milliseconds>(now - lastSensorSample).count() >= 60) {
+            sensorSignal.emit({sensor1.sampleData(), sensor2.sampleData()});
+            lastSensorSample = now;
+        }
+        if (duration_cast<milliseconds>(now - lastCameraSample).count() >= 120) {
+            cameraSignal.emit(camera.sampleData());
+            lastCameraSample = now;
+        }
     }
 };
