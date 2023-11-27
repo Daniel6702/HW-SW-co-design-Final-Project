@@ -24,3 +24,15 @@ int main(void) {
     
     return 0;
 }
+
+/*
+Modularity and Single Responsibility Principle:
+The system is broken down into distinct modules each with a clear responsibility. 
+Likewise, each class encapsulates its data and behavior, adhering to the encapsulation principle.
+The modular approach in the architecture is a key enabler for hardware-software co-design.
+Each module can be independently evaluated for hardware acceleration based on their computational complexity.
+The clear interfaces can be mapped to hardware-software communication protocols, such as AXI for FPGA-based designs.
+
+
+
+*/
