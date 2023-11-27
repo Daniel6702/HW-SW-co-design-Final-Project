@@ -3,5 +3,7 @@ enum Event {
     Activate,
     Deactivate,
     Trigger,
-    Reset
+    Reset,
+    NoEvent,
+    ValidCode,
 };
