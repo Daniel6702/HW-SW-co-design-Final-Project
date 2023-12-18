@@ -1,0 +1,35 @@
+@startuml State Diagram
+
+[*] --> Inactive
+
+state Inactive {
+    [*] --> Waiting : Initialize
+    Waiting --> [*] : Valid Pin Code Entered
+}
+
+state Active {
+    [*] --> Monitoring 
+    Monitoring : updateSensors every 60ms
+    Monitoring : updateCamera every 120ms
+    Monitoring --> Analyzing : Data Processing
+    Analyzing : Determine Intrusion Presence
+    Analyzing --> Monitoring : No Intrusion Detected
+    Analyzing --> [*] : Intrusion Detected
+}
+
+state Alarmed {
+    [*] --> AlarmOn : Intrusion Detected
+    AlarmOn : Sound Alarm
+    
+    AlarmOn --> WaitingForPin
+    AlarmOn --> BeginTimer
+    BeginTimer : Start 10s Timer
+    BeginTimer --> [*] : Timer Expired
+    WaitingForPin --> [*] : Valid Pin Code Entered
+}
+
+Inactive -right-> Active : Transition to Active
+Active -down-> Alarmed : Transition to Alarmed
+Alarmed -up-> Active : Return to Active
+
+@enduml

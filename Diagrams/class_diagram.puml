@@ -1,0 +1,65 @@
+@startuml Class Diagram
+class AlarmSystem {
+    -State current_state
+    -AnalysisModule analysisModule
+    -DataRetriever dataRetriever
+    -uint64_t alarmTriggerTime
+    -bool valid(int P)
+    -void reset()
+    +void update()
+    +void handle_event(Event event)
+    +bool enterPinCode(int code)
+
+}
+class AnalysisModule {
+    -bool checkIntrusion(sensorData, cameraData)
+    +Event analyze(sensorData, cameraData)
+}
+class DataRetriever {
+    -Sensor sensor1
+    -Sensor sensor2
+    -Camera camera
+    -uint64_t lastSensorSample
+    -uint64_t lastCameraSample
+    -vector<int> sensorData
+    -vector<vector<int>> cameraData
+    -const uint64_t SENSOR_SAMPLE_INTERVAL
+    -const uint64_t CAMERA_SAMPLE_INTERVAL
+    -bool isTimeToSample(lastSampleTime, interval)
+    -void updateSensors()
+    -void updateCamera()
+    +void update()
+    +const vector<int>& getSensorData()
+    +const vector<vector<int>>& getCameraData()
+}
+class InputDevice {
+    #unsigned int lfsr
+    #unsigned bit;
+    #unsigned lfsrRand()
+    {abstract}+~InputDevice()
+    {abstract}+T sampleData()
+}
+class Sensor {
+    +int sampleData override()
+}
+class Camera {
+    +vector<vector<int>> sampleData() override
+}
+class SimulatedClock {
+    {static}-uint64_t currentTime
+    {static}+void initialize()
+    {static}+uint64_t now()
+    {static}+void advanceTime(uint64_t milliseconds)
+}
+
+'Relations
+AlarmSystem ..> AnalysisModule
+AlarmSystem ..> DataRetriever 
+AlarmSystem ..> SimulatedClock : uses >
+DataRetriever ..> Sensor 
+DataRetriever ..> Camera 
+DataRetriever ..> SimulatedClock : uses >
+Sensor --|> InputDevice : extends >
+Camera --|> InputDevice : extends >
+
+@enduml

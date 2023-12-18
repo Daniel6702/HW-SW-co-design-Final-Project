@@ -1,0 +1,69 @@
+@startuml Sequence Diagram
+
+actor User
+participant "AlarmSystem" as AS
+participant "DataRetriever" as DR
+participant "AnalysisModule" as AM
+participant "Sensor" as S
+participant "Camera" as C
+participant "SimulatedClock" as SC
+
+== Initialization ==
+User -> AS : enterPinCode(P)
+activate AS
+AS -> AS : valid(P)
+AS --> User : State: Active
+
+== Sensor Data Retrieval ==
+loop Every 60 ms [Asynchronous]
+    AS -> DR : updateSensors()
+    activate DR
+    DR -> S : sampleData()
+    activate S
+    S --> DR : v(Si)
+    deactivate S
+    DR --> AS : sensorData
+    deactivate DR
+end
+
+== Camera Data Retrieval ==
+loop Every 120 ms [Asynchronous]
+    AS -> DR : updateCamera()
+    activate DR
+    DR -> C : sampleData()
+    activate C
+    C --> DR : v(C)
+    deactivate C
+    DR --> AS : cameraData
+    deactivate DR
+end
+
+== Data Analysis and Intrusion Check ==
+AS -> AM : analyze(sensorData, cameraData)
+activate AM
+AM -> AM : checkIntrusion(sensorData, cameraData)
+AM --> AS : Event
+deactivate AM
+
+== Event Handling ==
+alt If Intrusion Detected
+    AS -> AS : handle_event(Intrusion)
+    AS --> User : Alarm ON
+    AS -> AS : State: Alarmed
+else No Intrusion
+    AS -> AS : reset()
+end
+
+== Alarm Handling ==
+alt Valid Pin Entered
+    User -> AS : enterPinCode(P)
+    AS -> AS : valid(P)
+    AS --> User : State: Active
+else 10s Elapsed
+    AS -> SC : advanceTime(10000)
+    SC --> AS
+    AS -> AS : reset()
+    AS --> User : State: Active
+end
+
+@enduml

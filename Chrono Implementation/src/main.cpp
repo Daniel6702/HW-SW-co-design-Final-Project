@@ -3,8 +3,11 @@
 #include "..\\include\\alarm_system.h"
 using namespace std;
 
-int generatePinCode() {
-    return rand() % 10;
+unsigned generatePinCode() { 
+    unsigned int lfsr = 0xACE1u;
+    unsigned bit;
+    bit  = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5) ) & 1;
+    return (lfsr =  (lfsr >> 1) | (bit << 15)) % 10;
 }
 
 int main(void) {
