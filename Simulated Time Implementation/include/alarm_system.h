@@ -30,8 +30,13 @@ public:
 
     void update() {
         if (current_state == Active) {
+            //Update sensor and camera data
             dataRetriever.update();
+
+            //Retrieve and Analyze the data
             Event event = analysisModule.analyze(dataRetriever.getSensorData(), dataRetriever.getCameraData());
+
+            //Handle the returned event 
             handle_event(event);
         } else if (current_state == Alarmed) {
             uint64_t now = SimulatedClock::now();

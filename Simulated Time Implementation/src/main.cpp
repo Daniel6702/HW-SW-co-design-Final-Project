@@ -1,5 +1,5 @@
 #include <iostream>
-#include <thread> // for std::this_thread::sleep_for
+#include <thread>
 #include "..\\include\\alarm_system.h"
 #include "..\\include\\simulated_clock.h" 
 using namespace std;
@@ -25,7 +25,7 @@ int main(void) {
     while (true) {
         alarmSystem.update();
         SimulatedClock::advanceTime(1);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Delay of 100 milliseconds
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Delay of 100 milliseconds
     }
     return 0;
 }
