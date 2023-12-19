@@ -5,20 +5,24 @@
 
 using namespace std;
 
+//g++ -o test_alarm_system.exe test_alarm_system.cpp analyze.cpp
+//g++ -pg -o program test_alarm_system.cpp analyze.cpp     
+//g++ -g test_alarm_system.cpp analyze.cpp -O0 program
+
 void testAlarmSystem() {
     SimulatedClock::initialize();
 
     AlarmSystem alarmSystem;
 
-    assert(alarmSystem.getState() == Inactive);
-
     assert(!alarmSystem.enterPinCode(1)); 
+
+    assert(alarmSystem.getState() == Inactive);
 
     assert(alarmSystem.enterPinCode(2));
 
     assert(alarmSystem.getState() == Active);
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 100000000; ++i) {
         alarmSystem.update();
         SimulatedClock::advanceTime(10);
     }
