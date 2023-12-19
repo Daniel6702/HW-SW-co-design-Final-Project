@@ -46,6 +46,17 @@ public:
         }
     }
 
+    void manual_trigger() {
+        vector<int> sensorData = {5, 5};
+        vector<vector<int>> cameraData(9, vector<int>(9, 9));
+        Event event = analysisModule.analyze(sensorData, cameraData);
+        handle_event(event);
+    }
+
+    State getState() {
+        return current_state;
+    }
+
     void handle_event(Event event) {
         switch (current_state) {
             case Inactive:
