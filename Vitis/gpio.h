@@ -49,15 +49,8 @@ void initiate_gpio() {
     WriteGpio(LED_BASE_ADDR, GPIO_DIR_OFFSET, 0x0);
 }
 
-int main(void) {
-    initiate_gpio();
-
-    while(IsButtonPressed(BUTTON1) == false) {}
-
-    while(true) {
-        TurnOnLed(LED2 | LED3);
-        wait(10000000);
-        TurnOffLed(LED2 | LED3);
-        wait(10000000);
-    }
+void InvertLedState(u32 led) {
+    u32 current = ReadGpio(LED_BASE_ADDR, GPIO_DATA_OFFSET);
+    u32 newState = current ^ led; 
+    WriteGpio(LED_BASE_ADDR, GPIO_DATA_OFFSET, newState);
 }
